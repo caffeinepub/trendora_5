@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartDrawer } from "./components/CartDrawer";
 import { ExploreCategories } from "./components/ExploreCategories";
 import { FeaturedCollections } from "./components/FeaturedCollections";
@@ -10,6 +10,7 @@ import { HeroSection } from "./components/HeroSection";
 import { PromoBar } from "./components/PromoBar";
 import { TrendingNow } from "./components/TrendingNow";
 import { WishlistDrawer } from "./components/WishlistDrawer";
+import { useActor } from "./hooks/useActor";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000 } },
@@ -27,11 +28,16 @@ function TrendoraApp() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const { actor } = useActor();
+
+  useEffect(() => {
+    if (!actor) return;
+    (actor as any).recordVisit().catch(() => {});
+  }, [actor]);
 
   const handleCategoryChange = (cat: string | null) => {
     setActiveCategory(cat);
     if (cat !== null) {
-      // Scroll to trending section
       setTimeout(() => {
         document
           .getElementById("trending")

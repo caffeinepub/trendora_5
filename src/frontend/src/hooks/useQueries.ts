@@ -100,4 +100,21 @@ export function useToggleWishlist() {
   });
 }
 
+export function useVisitorCount() {
+  const { actor, isFetching } = useActor();
+  return useQuery<bigint>({
+    queryKey: ["visitorCount"],
+    queryFn: async () => {
+      if (!actor) return 0n;
+      try {
+        return await (actor as any).getVisitorCount();
+      } catch {
+        return 0n;
+      }
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 60_000,
+  });
+}
+
 export { ProductCategory };

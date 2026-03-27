@@ -180,6 +180,18 @@ actor {
   let carts = Map.empty<Principal, Map.Map<Nat, Nat>>();
   let wishlists = Map.empty<Principal, Set.Set<Nat>>();
 
+  // Visitor counter
+  var visitorCount : Nat = 0;
+
+  public func recordVisit() : async Nat {
+    visitorCount += 1;
+    visitorCount;
+  };
+
+  public query func getVisitorCount() : async Nat {
+    visitorCount;
+  };
+
   // Cart functions
   public shared ({ caller }) func addToCart(productId : Nat, quantity : Nat) : async () {
     if (quantity == 0) { Runtime.trap("Quantity must be at least 1") };

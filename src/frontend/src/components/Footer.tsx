@@ -1,7 +1,9 @@
 import { Input } from "@/components/ui/input";
+import { Users } from "lucide-react";
 import { useState } from "react";
 import { SiFacebook, SiInstagram, SiPinterest, SiX } from "react-icons/si";
 import { toast } from "sonner";
+import { useVisitorCount } from "../hooks/useQueries";
 
 const socialLinks = [
   { icon: SiInstagram, label: "Instagram", href: "https://instagram.com" },
@@ -15,6 +17,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   const hostname =
     typeof window !== "undefined" ? window.location.hostname : "trendora";
+  const { data: visitorCount } = useVisitorCount();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,6 +192,20 @@ export function Footer() {
               Built with love using caffeine.ai
             </a>
           </p>
+
+          {visitorCount !== undefined && visitorCount > 0n && (
+            <div
+              className="flex items-center gap-1.5"
+              style={{ color: "oklch(0.45 0.005 80)" }}
+              data-ocid="footer.panel"
+            >
+              <Users size={11} />
+              <span className="text-xs">
+                {visitorCount.toLocaleString()} visitors
+              </span>
+            </div>
+          )}
+
           <div className="flex gap-4">
             {["Privacy Policy", "Terms of Use", "Cookie Policy"].map((item) => (
               <span
